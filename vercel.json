@@ -1,0 +1,153 @@
+import { Record } from "ts-toolbelt";
+
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvVariables {
+  [key: string]: string | undefined;
+}
+
+interface HeaderRule {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  [path: string]: { regexPattern: string; immutableMaxAgeSeconds: number };
+}
+
+interface FrameworkSettings {
+  vercel?: Record<string, any>;
+  netlify?: Record<string, any>;
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvVariables;
+  headers: Array<HeaderRule>;
+  cacheStrategies: CacheStrategy;
+  frameworkSettings: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build",
+    output: ".next"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NODE_ENV: process.env.NODE_ENV
+  },
+  headers: [
+    {
+      source: "/api/:path*",
+      headers: [
+        { key: "Access-Control-Allow-Credentials", value: "true" },
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Vary", value: "Origin" }
+      ]
+    },
+    {
+      source: "/(.*)",
+      headers: [
+        { key: "strict-transport-security", value: "max-age=31536000; includeSubDomains; preload" },
+        { key: "x-content-type-options", value: "nosniff" },
+        { key: "x-frame-options", value: "DENY" },
+        { key: "x-xss-protection", value: "1; mode=block" }
+      ]
+    }
+  ],
+  cacheStrategies: {
+    "/_next/static/:path*": {
+      regexPattern: "^/_next/static/(.*)",
+      immutableMaxAgeSeconds: 3153600
+    },
+    "/api/:path*": {
+      regexPattern: "^/api/(.*)",
+      immutableMaxAgeSeconds: 0
+    }
+  },
+  frameworkSettings: {
+    vercel: {},
+    netlify: {}
+  }
+};
+
+import { Record } from "ts-toolbelt";
+
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvVariables {
+  [key: string]: string | undefined;
+}
+
+interface HeaderRule {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  [path: string]: { regexPattern: string; immutableMaxAgeSeconds: number };
+}
+
+interface FrameworkSettings {
+  vercel?: Record<string, any>;
+  netlify?: Record<string, any>;
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvVariables;
+  headers: Array<HeaderRule>;
+  cacheStrategies: CacheStrategy;
+  frameworkSettings: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build",
+    output: ".next"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NODE_ENV: process.env.NODE_ENV
+  },
+  headers: [
+    {
+      source: "/api/:path*",
+      headers: [
+        { key: "Access-Control-Allow-Credentials", value: "true" },
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Vary", value: "Origin" }
+      ]
+    },
+    {
+      source: "/(.*)",
+      headers: [
+        { key: "strict-transport-security", value: "max-age=31536000; includeSubDomains; preload" },
+        { key: "x-content-type-options", value: "nosniff" },
+        { key: "x-frame-options", value: "DENY" },
+        { key: "x-xss-protection", value: "1; mode=block" }
+      ]
+    }
+  ],
+  cacheStrategies: {
+    "/_next/static/:path*": {
+      regexPattern: "^/_next/static/(.*)",
+      immutableMaxAgeSeconds: 3153600
+    },
+    "/api/:path*": {
+      regexPattern: "^/api/(.*)",
+      immutableMaxAgeSeconds: 0
+    }
+  },
+  frameworkSettings: {
+    vercel: {},
+    netlify: {}
+  }
+};
